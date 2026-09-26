@@ -6,9 +6,9 @@ Three attention configurations are provided:
 
 | Model | Attention Module | Attention Location |
 |---|---|---|
-| YOLO11-SKLayer | SKLayer | Backbone + Neck |
-| YOLO11-LCT | LCT | Neck |
-| YOLO11-SRM | SRM | Backbone |
+| YOLO11 | SE, BAM, CAM, DA, GCM, SK, LCT, GuCT, SimAM, and SRM | Backbone + Neck |
+| YOLO11 | SE, BAM, CAM, DA, GCM, SK, LCT, GuCT, SimAM, and SRM | Neck |
+| YOLO11 | SE, BAM, CAM, DA, GCM, SK, LCT, GuCT, SimAM, and SRM | Backbone |
 
 ## Overview
 
