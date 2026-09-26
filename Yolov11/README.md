@@ -16,30 +16,28 @@ The project investigates the integration of attention mechanisms into different 
 
 ### Model configurations
 
-**YOLO11 + SKLayer — Backbone + Neck**
+**YOLO11 + Attention — Backbone + Neck**
 
-SKLayer is inserted after the backbone feature-extraction stage and at multiple feature-fusion stages in the neck.
+Various attention modules are inserted after the backbone feature-extraction stage and at multiple feature-fusion stages in the neck.
 
-**YOLO11 + LCT — Neck**
+**YOLO11 + Attention — Neck**
 
-LCT is integrated at multiple neck stages while the backbone retains the standard YOLO11 structure.
+Various attention modules are integrated at multiple neck stages while the backbone retains the standard YOLO11 structure.
 
-**YOLO11 + SRM — Backbone**
+**YOLO11 + Attention — Backbone**
 
-SRM is inserted at the end of the backbone, while the neck retains the standard YOLO11 structure.
+Various attention modules are inserted at the end of the backbone, while the neck retains the standard YOLO11 structure.
 
 ## Model Files
 
 ```text
 models/
-├── yolo11n_SKLayer.yaml
-├── yolo11s_LCT.yaml
-└── yolo11m_SRM.yaml
+├── neck_backbone_attention/*.yaml
+├── neck_attention/*.yaml
+└── backbone_attention/*.yaml
 ```
 
-The supplied YAML files define the custom architectures. They use the custom modules `SKLayer`, `LCT`, and `SRM`.
-
-> **Important:** If these attention modules are not already registered in your Ultralytics installation, their Python implementations and the corresponding Ultralytics module-registration changes must also be included in the repository.
+The supplied YAML files define the custom architectures. They use the custom modules SE, BAM, CAM, DA, GCM, SK, LCT, GuCT, SimAM, and SRM.
 
 ## Architecture
 
@@ -51,7 +49,7 @@ The experimental configurations compare attention placement at different locatio
           +----------------+----------------+
           |                |                |
           v                v                v
-      SKLayer             LCT              SRM
+    Attention           Attention        Attention
    Backbone + Neck        Neck           Backbone
           |                |                |
           +----------------+----------------+
@@ -62,9 +60,9 @@ The experimental configurations compare attention placement at different locatio
 
 Place the detailed architecture figure at:
 
-```text
+
 examples/architecture.png
-```
+
 
 ## Dataset
 
@@ -121,37 +119,25 @@ yolo checks
 
 ## Training
 
-### YOLO11 + SKLayer
+### YOLO11 + Attention
 
 ```bash
-yolo train model=models/yolo11n_SKLayer.yaml data=dataset/landslide.yaml epochs=500 batch=8 imgsz=640 name=yolo11n_SKLayer
-```
-
-### YOLO11 + LCT
-
-```bash
-yolo train model=models/yolo11s_LCT.yaml data=dataset/landslide.yaml epochs=500 batch=8 imgsz=640 name=yolo11s_LCT
-```
-
-### YOLO11 + SRM
-
-```bash
-yolo train model=models/yolo11m_SRM.yaml data=dataset/landslide.yaml epochs=500 batch=8 imgsz=640 name=yolo11m_SRM
+yolo train model=path_to.yaml data=dataset/landslide.yaml epochs=500 batch=8 imgsz=640
 ```
 
 > Do not provide two `model=` arguments in the same command. When training from a customized architecture, specify the appropriate custom YAML through `model=`.
 
-If pretrained YOLO11 weights are intended to be transferred to a customized architecture, verify checkpoint compatibility before training.
+If you intend to transfer pretrained YOLO11 weights to a customized architecture, verify checkpoint compatibility before training.
 
 ## Validation
 
 Example:
 
 ```bash
-yolo val model=runs/detect/yolo11n_SKLayer/weights/best.pt data=dataset/landslide.yaml imgsz=640
+yolo val model=path_to/weights/best.pt data=dataset/landslide.yaml imgsz=640
 ```
 
-The same procedure can be used for the LCT and SRM models by changing the checkpoint path.
+You can use the same procedure for all attention models by changing the checkpoint path.
 
 Recommended detection metrics include:
 
@@ -165,7 +151,7 @@ Recommended detection metrics include:
 Example:
 
 ```bash
-yolo predict model=runs/detect/yolo11n_SKLayer/weights/best.pt source=examples/input imgsz=640 save=True
+yolo predict model=path/weights/best.pt source=examples/input imgsz=640 save=True
 ```
 
 Representative prediction images can be placed in:
@@ -173,21 +159,6 @@ Representative prediction images can be placed in:
 ```text
 examples/predictions/
 ```
-
-## Results
-
-A recommended results table is:
-
-| Model | Attention | Location | Precision | Recall | mAP@50 | mAP@50–95 | Parameters | FLOPs | Inference Time |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|
-| YOLO11-SKLayer | SKLayer | Backbone + Neck | — | — | — | — | — | — | — |
-| YOLO11-LCT | LCT | Neck | — | — | — | — | — | — | — |
-| YOLO11-SRM | SRM | Backbone | — | — | — | — | — | — | — |
-
-Replace the placeholders with the actual experimental results.
-
-Recommended qualitative examples include small landslides, large landslides, irregular landslides, multiple landslides, and challenging background terrain.
-
 ## Repository Structure
 
 ```text
@@ -198,32 +169,21 @@ YOLO11-Attention-Landslide-Detection/
 ├── LICENSE
 │
 ├── models/
-│   ├── yolo11n_SKLayer.yaml
-│   ├── yolo11s_LCT.yaml
-│   └── yolo11m_SRM.yaml
+│   ├── neck_backbone_attention/*.yaml
+│   ├── neck_attention/*.yaml
+│   └── backbone_attention/*.yaml
 │
 ├── dataset/
 │   ├── landslide.yaml
 │   └── README.md
 │
-├── custom_modules/
-│   ├── SKLayer.py
-│   ├── LCT.py
-│   └── SRM.py
 │
 ├── examples/
-│   ├── architecture.png
-│   ├── input/
-│   └── predictions/
-│
-└── results/
-    ├── results.csv
-    ├── training_curves.png
-    ├── confusion_matrix.png
-    └── qualitative_results.png
-```
+   ├── architecture.png
+   ├── input/
+   └── predictions/
 
-The `custom_modules/` directory is required if the attention implementations are not already available in the installed Ultralytics source.
+```
 
 ## Reproducibility
 
