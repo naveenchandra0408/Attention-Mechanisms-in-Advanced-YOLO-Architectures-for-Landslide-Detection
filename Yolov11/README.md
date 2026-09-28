@@ -165,8 +165,6 @@ examples/predictions/
 YOLO11-Attention-Landslide-Detection/
 │
 ├── README.md
-├── requirements.txt
-├── LICENSE
 │
 ├── models/
 │   ├── neck_backbone_attention/*.yaml
@@ -175,13 +173,8 @@ YOLO11-Attention-Landslide-Detection/
 │
 ├── dataset/
 │   ├── landslide.yaml
-│   └── README.md
-│
-│
-├── examples/
-   ├── architecture.png
-   ├── input/
-   └── predictions/
+│── architecture.png
+
 
 ```
 
